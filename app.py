@@ -41,7 +41,7 @@ def generate_story_response():
 
 def speak_text(text):
     tts = gTTS(text=text, lang="en")
-    audio_file = "response.mp3"
+    audio_file = "/app/response.mp3"  # Absolute path to the audio file
     tts.save(audio_file)
 
     # Load the audio file with pygame
@@ -53,6 +53,10 @@ def speak_text(text):
     # Wait for the audio to finish playing
     while pygame.mixer.music.get_busy():
         continue
+
+    # Clean up
+    pygame.mixer.music.stop()
+    pygame.mixer.quit()
 
     st.write("Chatbot:", text)
 
