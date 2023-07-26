@@ -41,25 +41,13 @@ def generate_story_response():
 
 def speak_text(text):
     tts = gTTS(text=text, lang="en")
-    audio_file = "/app/response.mp3"  # Absolute path to the audio file
+    audio_file = "response.mp3"
     tts.save(audio_file)
 
-    # Load the audio file with pygame
-    pygame.mixer.music.load(audio_file)
-
-    # Play the audio
-    pygame.mixer.music.play()
-
-    # Wait for the audio to finish playing
-    while pygame.mixer.music.get_busy():
-        continue
-
-    # Clean up
-    pygame.mixer.music.stop()
-    pygame.mixer.quit()
+    # Play the audio using playsound
+    playsound.playsound(audio_file)
 
     st.write("Chatbot:", text)
-
 def main():
     st.title("Story Chatbot")
     st.write("You can ask the chatbot to tell you a story.")
