@@ -4,6 +4,8 @@ import playsound
 import os
 import random
 import streamlit as st
+import tempfile
+import webbrowser
 
 # Sample stories database
 stories = [
@@ -21,7 +23,7 @@ def listen_for_voice():
         try:
             audio = recognizer.listen(source, timeout=5)  # Set a timeout for listening
         except sr.WaitTimeoutError:
-            st.warning("Listening timed out. Please type your input.")
+            st.warning("Listening timed out. Please type or click 'Listen' again.")
             return ""
 
     try:
