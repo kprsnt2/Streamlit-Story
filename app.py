@@ -1,10 +1,9 @@
 import speech_recognition as sr
 from gtts import gTTS
 import playsound
-
+import os
 import random
 import streamlit as st
-
 
 # Sample stories database
 stories = [
@@ -19,7 +18,11 @@ def listen_for_voice():
     with sr.Microphone() as source:
         st.info("Listening...")
         recognizer.adjust_for_ambient_noise(source)  # Adjust for background noise
-        audio = recognizer.listen(source)
+        try:
+            audio = recognizer.listen(source, timeout=5)  # Set a timeout for listening
+        except sr.WaitTimeoutError:
+            st.warning("Listening timed out. Please type your input.")
+            return ""
 
     try:
         st.info("Recognizing...")
@@ -43,14 +46,21 @@ def speak_text(text):
 
     # Play the audio using playsound
     playsound.playsound(audio_file)
+    os.remove(audio_file)  # Remove the audio file after playing
 
     st.write("Chatbot:", text)
+
 def main():
     st.title("Story Chatbot")
     st.write("You can ask the chatbot to tell you a story.")
-    
-    user_input = st.text_input("Your Message:")
-    
+
+    user_input_type = st.radio("Select input type:", ("Speech", "Text"))
+
+    if user_input_type == "Speech":
+        user_input = listen_for_voice()
+    else:
+        user_input = st.text_input("Your Message:")
+
     if st.button("Send"):
         if "exit" in user_input:
             st.write("Goodbye!")
@@ -59,6 +69,12 @@ def main():
             speak_text(story_response)
         else:
             st.write("Sorry, I didn't understand that. Please say 'tell me a story' or 'exit'.")
+
+        st.text("")  # Add some space between conversations
+
+    st.text("")  # Add some space between conversations
+    st.subheader("Conversation History:")
+    st.text("")  # Add some space between conversations
 
 if __name__ == "__main__":
     main()
