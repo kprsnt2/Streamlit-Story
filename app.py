@@ -1,14 +1,11 @@
 import speech_recognition as sr
 from gtts import gTTS
 import playsound
-import pygame
+
 import random
 import streamlit as st
 
-# Initialize pygame mixer only once
-if not pygame.get_init():
-    pygame.mixer.init()
-    
+
 # Sample stories database
 stories = [
     "Once upon a time, there was a little rabbit.",
