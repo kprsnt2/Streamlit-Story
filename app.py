@@ -1,6 +1,7 @@
 import speech_recognition as sr
 from gtts import gTTS
 import playsound
+import pygame
 import random
 import streamlit as st
 
