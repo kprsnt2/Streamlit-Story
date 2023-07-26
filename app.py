@@ -5,6 +5,10 @@ import pygame
 import random
 import streamlit as st
 
+# Initialize pygame mixer only once
+if not pygame.get_init():
+    pygame.mixer.init()
+    
 # Sample stories database
 stories = [
     "Once upon a time, there was a little rabbit.",
@@ -49,10 +53,6 @@ def speak_text(text):
     # Wait for the audio to finish playing
     while pygame.mixer.music.get_busy():
         continue
-
-    # Clean up
-    pygame.mixer.music.stop()
-    pygame.mixer.quit()
 
     st.write("Chatbot:", text)
 
