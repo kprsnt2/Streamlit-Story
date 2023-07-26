@@ -10,29 +10,25 @@ stories = [
     "In a magical land far away, there lived a brave knight.",
     "A long time ago, in a deep forest, there was a wise owl.",
     "On a sunny day, a mischievous monkey swung from tree to tree.",
-    "Once upon a time, there was a shiny red train chugging along the tracks.",
-    "In a bustling city, a double-decker bus roamed the streets, picking up passengers.",
-    "A long drive through the countryside, a family of bears went on a car adventure.",
 ]
-
 
 def listen_for_voice():
     recognizer = sr.Recognizer()
     with sr.Microphone() as source:
-        print("Listening...")
+        st.info("Listening...")
         recognizer.adjust_for_ambient_noise(source)  # Adjust for background noise
         audio = recognizer.listen(source)
 
     try:
-        print("Recognizing...")
+        st.info("Recognizing...")
         user_input = recognizer.recognize_google(audio)
-        print("You said:", user_input)
+        st.write("You said:", user_input)
         return user_input.lower()
     except sr.UnknownValueError:
-        print("Sorry, I didn't catch that.")
+        st.error("Sorry, I didn't catch that.")
         return ""
     except sr.RequestError:
-        print("Could not request results. Please check your internet connection.")
+        st.error("Could not request results. Please check your internet connection.")
         return ""
 
 def generate_story_response():
@@ -43,32 +39,36 @@ def speak_text(text):
     audio_file = "response.mp3"
     tts.save(audio_file)
 
-    pygame.mixer.init()
+    # Load the audio file with pygame
     pygame.mixer.music.load(audio_file)
+
+    # Play the audio
     pygame.mixer.music.play()
 
+    # Wait for the audio to finish playing
     while pygame.mixer.music.get_busy():
         continue
 
+    # Clean up
+    pygame.mixer.music.stop()
     pygame.mixer.quit()
-    print("Chatbot:", text)
+
+    st.write("Chatbot:", text)
 
 def main():
     st.title("Story Chatbot")
     st.write("You can ask the chatbot to tell you a story.")
-
+    
     user_input = st.text_input("Your Message:")
+    
     if st.button("Send"):
-        # Process the user input here and generate the response
         if "exit" in user_input:
-            response = "Goodbye!"
+            st.write("Goodbye!")
         elif "tell me a story" in user_input:
-            response = generate_story_response()
-            speak_text(response)
+            story_response = generate_story_response()
+            speak_text(story_response)
         else:
-            response = "Sorry, I didn't understand that. Please say 'tell me a story' or 'exit'."
-
-        st.write("Chatbot says:", response)
+            st.write("Sorry, I didn't understand that. Please say 'tell me a story' or 'exit'.")
 
 if __name__ == "__main__":
     main()
